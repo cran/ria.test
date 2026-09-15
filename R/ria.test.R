@@ -9,16 +9,16 @@
 #'  A \code{data.frame} in wide format containing all necessary variables
 #'  for the estimation problem.
 #' @param trt [\code{character}]\cr
-#'  A vector containing the column names of treatment variables.
+#'  A vector containing the column names of treatment variables (D).
 #' @param outcome [\code{character(1)}]\cr
 #'  The column name of the outcome variable.
 #' @param mediators [\code{character}]\cr
 #'	A vector containing the column names of the mediator variables.
 #' @param pre [\code{character}]\cr
-#'  A vector containing the column names of pre-treatment confounders to be
+#'  A vector containing the column names of baseline covariates (C) to be
 #'  controlled for.
 #' @param post [\code{character}]\cr
-#'  A vector containing the column names of post-treatment confounders.
+#'  A vector containing the column names of post-treatment confounders (L).
 #' @param obs [\code{character(1)}]\cr
 #'  An optional column name (with values coded as 0 or 1) for whether or not the \code{outcome} is observed.
 #'  Must be provided if there is missingness in the outcome! Default is \code{NULL}.
@@ -81,12 +81,12 @@ ria.test <- function(data,
 	cd <- ria.test_data(
 		data = data,
 		vars = ria.test_vars(
-			A = trt,
+			D = trt,
 			Y = outcome,
 			M = mediators,
-			Z = post,
-			W = pre,
-			C = obs %??% NA_character_,
+			L = post,
+			C = pre,
+			observed = obs %??% NA_character_,
 			id = id %??% NA_character_
 		),
 		weights = weights,
@@ -96,7 +96,7 @@ ria.test <- function(data,
 
 	# Create the independent post-treatment-confounder draw used by RIAs.
 	if (length(params$randomized) > 0) {
-		cd <- add_zp(cd, control)
+		cd <- add_lp(cd, control)
 	}
 
 	# Create folds for cross fitting

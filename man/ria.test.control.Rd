@@ -7,7 +7,7 @@
 ria.test.control(
   crossfit_folds = 10L,
   mlr3superlearner_folds = 10L,
-  zprime_folds = 1L,
+  lprime_folds = 1L,
   epochs = 100L,
   learning_rate = 0.01,
   batch_size = 64,
@@ -20,7 +20,7 @@ ria.test.control(
 
 \item{mlr3superlearner_folds}{[\code{numeric(1)}]\cr The number of `mlr3superlearner` folds.}
 
-\item{zprime_folds}{[\code{numeric(1)}]\cr The number of folds to split that data into for calculating Z'.
+\item{lprime_folds}{[\code{numeric(1)}]\cr The number of folds to split that data into for calculating L'.
 With larger sample sizes, a larger number will increase speed.}
 
 \item{epochs}{[\code{numeric(1)}]\cr The number of epochs to train the neural network.}
@@ -35,6 +35,7 @@ With larger sample sizes, a larger number will increase speed.}
 generator. This controls neural-network initialization and dropout but does
 not affect R's random-number generator. Use \code{set.seed()} separately to
 control R-level randomness.}
+
 }
 \value{
 A list of control parameters

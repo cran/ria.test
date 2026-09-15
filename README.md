@@ -22,26 +22,28 @@ remotes::install_github("ang-yu/ria.test")
 
 ### Usage
 
+Notation: `D` denotes treatment (`trt`), `C` baseline covariates (`pre`), and `L` post-treatment confounders (`post`). `L′` is the matched donor copy of `L` used for the randomized interventional analogues. Set `lprime_folds` in `ria.test.control()` to control the matching batches.
+
 ``` r
 library(ria.test)
 
 # `set.seed()` controls R-level randomness; `torch_seed` controls Torch.
 set.seed(123)
 n <- 500
-w <- rnorm(n)
-a <- rbinom(n, 1, plogis(w))
-l <- rnorm(n, a + w)
-m <- rnorm(n, a + l + w)
-y <- rnorm(n, a + l + m + w)
-dat <- data.frame(w, a, l, m, y)
+C <- rnorm(n)
+D <- rbinom(n, 1, plogis(C))
+L <- rnorm(n, D + C)
+M <- rnorm(n, D + L + C)
+Y <- rnorm(n, D + L + M + C)
+dat <- data.frame(C, D, L, M, Y)
 
 test_fit <- ria.test(
   data = dat,
-  trt = "a",
-  outcome = "y",
-  mediators = "m",
-  pre = "w",
-  post = "l",
+  trt = "D",
+  outcome = "Y",
+  mediators = "M",
+  pre = "C",
+  post = "L",
   d0 = \(data, trt) rep(0, nrow(data)),
   d1 = \(data, trt) rep(1, nrow(data)),
   control = ria.test.control(torch_seed = 123L)

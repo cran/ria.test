@@ -30,8 +30,8 @@ shift_trt_single <- function(data, trt, .f) {
 
 shift_trt_multivariate <- function(data, trt, .f) {
 	new <- .f(data, trt)
-	for (a in trt) {
-		data[[a]] <- new[[a]]
+	for (d in trt) {
+		data[[d]] <- new[[d]]
 	}
 	data
 }

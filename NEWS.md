@@ -1,3 +1,26 @@
+# ria.test 0.3.0
+
+* Use D for treatment, C for baseline covariates, and L for post-treatment
+  confounders throughout the implementation, examples, and documentation.
+  The outcome-observation indicator is named `observed` internally.
+  Rename the matched copy to L-prime and its control to `lprime_folds`.
+  This is a breaking rename: use `lprime_folds` in place of `zprime_folds`.
+  The public arguments `trt`, `pre`, and `post` are unchanged.
+* L-prime permutations now bypass the LP when every treatment/baseline profile
+  in a fold occurs at least twice. Random cycles within identical profiles give
+  an exact zero-cost optimum without constructing distances or an LP. This also
+  handles all-identical profiles without dividing by zero.
+* Permutations return indices internally, and L is selected directly instead of
+  multiplying by a dense permutation matrix. Folds with singleton profiles
+  continue to use the full LP; solver status and permutation validity are checked.
+  Folds with fewer than two observations produce an explicit error.
+* The fast path is reproducible under `set.seed()`, but chooses tied optima and
+  consumes random numbers differently from earlier versions. Permutations and
+  downstream estimates can therefore change for the same seed.
+* This bypasses the reported Rsymphony native crash for qualifying folds; it does
+  not fix or diagnose the underlying native defect. The general LP path still
+  depends on Rsymphony and retains its quadratic size.
+
 # ria.test 0.2.1
 
 ## Reproducibility

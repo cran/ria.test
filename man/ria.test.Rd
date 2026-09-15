@@ -27,7 +27,7 @@ A \code{data.frame} in wide format containing all necessary variables
 for the estimation problem.}
 
 \item{trt}{[\code{character}]\cr
-A vector containing the column names of treatment variables.}
+A vector containing the column names of treatment variables (D).}
 
 \item{outcome}{[\code{character(1)}]\cr
 The column name of the outcome variable.}
@@ -36,11 +36,11 @@ The column name of the outcome variable.}
 A vector containing the column names of the mediator variables.}
 
 \item{pre}{[\code{character}]\cr
-A vector containing the column names of pre-treatment confounders to be
+A vector containing the column names of baseline covariates (C) to be
 controlled for.}
 
 \item{post}{[\code{character}]\cr
-A vector containing the column names of post-treatment confounders.}
+A vector containing the column names of post-treatment confounders (L).}
 
 \item{obs}{[\code{character(1)}]\cr
 An optional column name (with values coded as 0 or 1) for whether or not the \code{outcome} is observed.
@@ -84,26 +84,26 @@ their difference, and the randomized interventional indirect and direct effects.
 if (torch::torch_is_installed()) {
 	set.seed(123)
 	n <- 200
-	w <- rnorm(n)
-	a <- rbinom(n, 1, plogis(w))
-	l <- rnorm(n, a + w)
-	m <- rnorm(n, a + l + w)
-	y <- rnorm(n, a + l + m + w)
-	dat <- data.frame(w, a, l, m, y)
+	C <- rnorm(n)
+	D <- rbinom(n, 1, plogis(C))
+	L <- rnorm(n, D + C)
+	M <- rnorm(n, D + L + C)
+	Y <- rnorm(n, D + L + M + C)
+	dat <- data.frame(C, D, L, M, Y)
 
 	res <- ria.test(
 		data = dat,
-		trt = "a",
-		outcome = "y",
-		mediators = "m",
-		pre = "w",
-		post = "l",
+		trt = "D",
+		outcome = "Y",
+		mediators = "M",
+		pre = "C",
+		post = "L",
 		d0 = \(data, trt) rep(0, nrow(data)),
 		d1 = \(data, trt) rep(1, nrow(data)),
 		control = ria.test.control(
 			crossfit_folds = 1L,
 			mlr3superlearner_folds = 2L,
-			zprime_folds = 2L,
+			lprime_folds = 2L,
 			epochs = 2L,
 			torch_seed = 123L
 		)

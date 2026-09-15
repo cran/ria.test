@@ -15,10 +15,10 @@ estimate_theta <- function(cd, folds, params, learners_regressions, control) {
 theta <- function(train, valid, vars, params, learners, control) {
 	continuous <- !is_binary(train$data[[vars@Y]])
 	valid <- valid[sapply(valid, \(x) ncol(x) > 0)]
-	obs <- censored(train$data, vars@C)
+	obs <- censored(train$data, vars@observed)
 
 	theta_y <- mlr3superlearner::mlr3superlearner(
-		data = train$data[obs, na.omit(c(vars@A, vars@W, vars@M, vars@Z, vars@Y))],
+		data = train$data[obs, na.omit(c(vars@D, vars@C, vars@M, vars@L, vars@Y))],
 		target = vars@Y,
 		library = learners,
 		outcome_type = ifelse(continuous, "continuous", "binomial"),
@@ -42,7 +42,7 @@ theta <- function(train, valid, vars, params, learners, control) {
 			b3_valid <- theta_y$preds[[j]]
 
 			theta2 <- mlr3superlearner::mlr3superlearner(
-				data = add_psuedo(train$data[, na.omit(c(vars@A, vars@W, vars@Z))], b3_train),
+				data = add_psuedo(train$data[, na.omit(c(vars@D, vars@C, vars@L))], b3_train),
 				target = "tmp_ria_test_pseudo_y",
 				library = learners,
 				outcome_type = "continuous",
@@ -55,7 +55,7 @@ theta <- function(train, valid, vars, params, learners, control) {
 			b2_valid <- theta2$preds[[k]]
 
 			theta1 <- mlr3superlearner::mlr3superlearner(
-				data = add_psuedo(train$data[, c(vars@A, vars@W)], b2_train),
+				data = add_psuedo(train$data[, c(vars@D, vars@C)], b2_train),
 				target = "tmp_ria_test_pseudo_y",
 				library = learners,
 				outcome_type = "continuous",
@@ -95,7 +95,7 @@ theta <- function(train, valid, vars, params, learners, control) {
 		b4_valid <- theta_y$preds[[i]]
 
 		theta3 <- mlr3superlearner::mlr3superlearner(
-			data = add_psuedo(train$data[, c(vars@A, vars@W, vars@M)], b4_train),
+			data = add_psuedo(train$data[, c(vars@D, vars@C, vars@M)], b4_train),
 			target = "tmp_ria_test_pseudo_y",
 			library = learners,
 			outcome_type = "continuous",
@@ -108,7 +108,7 @@ theta <- function(train, valid, vars, params, learners, control) {
 		b3_valid <- theta3$preds[[j]]
 
 		theta2 <- mlr3superlearner::mlr3superlearner(
-			data = add_psuedo(train$data[, c(vars@A, vars@W, vars@Z)], b3_train),
+			data = add_psuedo(train$data[, c(vars@D, vars@C, vars@L)], b3_train),
 			target = "tmp_ria_test_pseudo_y",
 			library = learners,
 			outcome_type = "continuous",
@@ -121,7 +121,7 @@ theta <- function(train, valid, vars, params, learners, control) {
 		b2_valid <- theta2$preds[[k]]
 
 		theta1 <- mlr3superlearner::mlr3superlearner(
-			data = add_psuedo(train$data[, c(vars@A, vars@W)], b2_train),
+			data = add_psuedo(train$data[, c(vars@D, vars@C)], b2_train),
 			target = "tmp_ria_test_pseudo_y",
 			library = learners,
 			outcome_type = "continuous",
@@ -147,7 +147,7 @@ theta <- function(train, valid, vars, params, learners, control) {
 	}
 
 	names(vals_r) <-
-		gsub("zp", "", unlist(lapply(params$randomized, \(x) paste0(gsub("data_", "", x), collapse = ""))))
+		gsub("lp", "", unlist(lapply(params$randomized, \(x) paste0(gsub("data_", "", x), collapse = ""))))
 
 	if (length(params$natural) == 0) {
 		return(list(r = vals_r))

@@ -2,7 +2,7 @@ Package: ria.test
 Type: Package
 Title: Testing Equality of Natural Mediation Effects and Their
         Randomized Interventional Analogues
-Version: 0.2.1
+Version: 0.3.0
 Authors@R: 
     c(person(given = "Ang",
              family = "Yu",
@@ -51,7 +51,7 @@ Suggests: testthat (>= 3.0.0)
 Config/testthat/edition: 3
 Config/roxygen2/version: 8.0.0
 NeedsCompilation: no
-Packaged: 2026-07-12 14:31:31 UTC; Ang
+Packaged: 2026-09-14 18:25:12 UTC; Ang
 Author: Ang Yu [aut, cre, cph] (Author and copyright holder of
     ria.test-specific extensions),
   Nicholas Williams [aut, cph] (ORCID:
@@ -61,4 +61,4 @@ Author: Ang Yu [aut, cre, cph] (Author and copyright holder of
   Iván Díaz [aut, cph] (ORCID: <https://orcid.org/0000-0001-9056-2047>,
     Author and copyright holder of code derived from crumble)
 Repository: CRAN
-Date/Publication: 2026-07-21 10:50:07 UTC
+Date/Publication: 2026-09-15 00:20:02 UTC

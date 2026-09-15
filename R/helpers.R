@@ -130,7 +130,7 @@ one_hot_encode <- function(data, vars) {
 	as.data.frame(model.matrix(~ ., data = tmp))[, -1, drop = FALSE]
 }
 
-no_Z <- function(vars) any(is.na(vars@Z))
+no_L <- function(vars) any(is.na(vars@L))
 
 is_normalized <- function(x, tolerance = .Machine$double.eps^0.5) {
 	# Check if the mean is approximately 1 within the given tolerance
